@@ -60,3 +60,44 @@ def triplets(a, b, c):
         i += 1
 
     return count
+
+
+# Complete the minTime function below.
+def get_bounds(machines, goal):
+    c = Counter(machines)
+    fastest = min(c)
+    return 1, math.ceil(fastest * goal / c[fastest]), c
+
+
+def calculate_machines_produced(c, time):
+    total_machines = 0
+    for k, v in c.items():
+        total_machines += (time // k) * v
+    return total_machines
+
+
+def minTime(machines, goal):
+    lb, ub, c = get_bounds(machines, goal)
+    print(lb, ub)
+    while ub - lb > 1:
+        mid = (lb + ub) // 2
+        total_machines = calculate_machines_produced(c, time=mid)
+        print(lb, ub, mid, total_machines)
+        if total_machines < goal:
+            lb = mid
+        else:
+            ub = mid
+    return ub
+
+# Complete the minTime function below.
+def maximumSum(a, m):
+    max_sum, mod_prefix= 0, 0
+    a1=[]
+    for i in a:
+        mod_prefix = (mod_prefix + i) % m
+        max_sum = max(max_sum, mod_prefix)
+        ind = bisect.bisect_left(a1, mod_prefix + 1)
+        if ind < len(a1):
+            max_sum = max(max_sum, mod_prefix - a1[ind] + m)
+        bisect.insort(a1, mod_prefix)
+    return max_sum
